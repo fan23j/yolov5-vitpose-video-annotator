@@ -1,14 +1,14 @@
-## Usage
+Annotation repo using large ViTPose models alongside Yolov5 detectors to annotate videos.
+
+## Setup
 
 We use PyTorch 1.9.0 or NGC docker 21.06, and mmcv 1.3.9 for the experiments.
 ```bash
-git clone https://github.com/open-mmlab/mmcv.git
+git clone https://github.com/fan23j/yolov5-vitpose-video-annotator.git
+cd yolov5-vitpose-video-annotator
 cd mmcv
-git checkout v1.3.9
 MMCV_WITH_OPS=1 pip install -e .
 cd ..
-git clone https://github.com/ViTAE-Transformer/ViTPose.git
-cd ViTPose
 pip install -v -e .
 ```
 
@@ -17,21 +17,8 @@ After install the two repos, install timm and einops, i.e.,
 pip install timm==0.4.9 einops
 ```
 
-After downloading the pretrained models, please conduct the experiments by running
-
-```bash
-# for single machine
-bash tools/dist_train.sh <Config PATH> <NUM GPUs> --cfg-options model.pretrained=<Pretrained PATH> --seed 0
-
-# for multiple machines
-python -m torch.distributed.launch --nnodes <Num Machines> --node_rank <Rank of Machine> --nproc_per_node <GPUs Per Machine> --master_addr <Master Addr> --master_port <Master Port> tools/train.py <Config PATH> --cfg-options model.pretrained=<Pretrained PATH> --launcher pytorch --seed 0
-```
-
-To test the pretrained models performance, please run 
-
-```bash
-bash tools/dist_test.sh <Config PATH> <Checkpoint PATH> <NUM GPUs>
-```
+## Download pre-trained models
+Download ViTPose pretrained model from below (thanks to the authors of ViTPose).
 
 For ViTPose+ pre-trained models, please first re-organize the pre-trained weights using
 
@@ -39,10 +26,30 @@ For ViTPose+ pre-trained models, please first re-organize the pre-trained weight
 python tools/model_split.py --source <Pretrained PATH>
 ```
 
-## MAE Pre-trained model
+Or for ViTPose with Halpe: 
 
-- The small size MAE pre-trained model can be found in [Onedrive](https://1drv.ms/u/s!AimBgYV7JjTlgccZeiFjh4DJ7gjYyg?e=iTMdMq). 
-- The base, large, and huge pre-trained models using MAE can be found in the [MAE official repo](https://github.com/facebookresearch/mae).
+Download desired Yolov5 pretrained model from [https://github.com/ultralytics/yolov5]
+
+Or replace `args.det_checkpoint` with yolov5 detector type at line 120 in `demo/top_down_video_demo_with_yolov5.py` to
+download model from torch hub.
+
+## Annotation script
+
+Specify arguments in `video.sh`.
+`--pose-config` Path to your ViTPose model config
+
+`--pose-checkpoint` Path to your pretrained ViTPose model
+
+`--det-checkpoint` Path to your pretrained Yolov5 detector model
+
+`--video-path` Path to your input video for inference
+
+`--out-video-root` Output video path
+
+Run the script with
+`
+sh video.sh
+`
 
 ## Results from this repo on MS COCO val set (single-task training)
 
