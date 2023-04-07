@@ -1,32 +1,43 @@
-<h1 align="left">ViTPose: Simple Vision Transformer Baselines for Human Pose Estimation<a href="https://arxiv.org/abs/2204.12484"><img src="https://img.shields.io/badge/arXiv-Paper-<COLOR>.svg" ></a> </h1> 
+## Usage
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/vitpose-simple-vision-transformer-baselines/pose-estimation-on-coco-test-dev)](https://paperswithcode.com/sota/pose-estimation-on-coco-test-dev?p=vitpose-simple-vision-transformer-baselines)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/vitpose-simple-vision-transformer-baselines/pose-estimation-on-aic)](https://paperswithcode.com/sota/pose-estimation-on-aic?p=vitpose-simple-vision-transformer-baselines)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/vitpose-simple-vision-transformer-baselines/pose-estimation-on-crowdpose)](https://paperswithcode.com/sota/pose-estimation-on-crowdpose?p=vitpose-simple-vision-transformer-baselines)
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/vitpose-simple-vision-transformer-baselines/pose-estimation-on-ochuman)](https://paperswithcode.com/sota/pose-estimation-on-ochuman?p=vitpose-simple-vision-transformer-baselines)
+We use PyTorch 1.9.0 or NGC docker 21.06, and mmcv 1.3.9 for the experiments.
+```bash
+git clone https://github.com/open-mmlab/mmcv.git
+cd mmcv
+git checkout v1.3.9
+MMCV_WITH_OPS=1 pip install -e .
+cd ..
+git clone https://github.com/ViTAE-Transformer/ViTPose.git
+cd ViTPose
+pip install -v -e .
+```
 
-<p align="center">
-  <a href="#Results">Results</a> |
-  <a href="#Updates">Updates</a> |
-  <a href="#Usage">Usage</a> |
-  <a href='#Todo'>Todo</a> |
-  <a href="#Acknowledge">Acknowledge</a>
-</p>
+After install the two repos, install timm and einops, i.e.,
+```bash
+pip install timm==0.4.9 einops
+```
 
-<p align="center">
-<a href="https://giphy.com/gifs/UfPQB1qKir7Vqem6sL/fullscreen"><img src="https://media.giphy.com/media/ZewXwZuixYKS2lZmNL/giphy.gif"></a>   <a href="https://giphy.com/gifs/DCvf1DrWZgbwPa8bWZ/fullscreen"><img src="https://media.giphy.com/media/2AEeuicbIjwqp2mbug/giphy.gif"></a>
-</p>
-<p align="center">
-<a href="https://giphy.com/gifs/r3GaZz7H1H6zpuIvPI/fullscreen"><img src="https://media.giphy.com/media/13oe6zo6b2B7CdsOac/giphy.gif"></a>    <a href="https://giphy.com/gifs/FjzrGJxsOzZAXaW7Vi/fullscreen"><img src="https://media.giphy.com/media/4JLERHxOEgH0tt5DZO/giphy.gif"></a>
-</p>
+After downloading the pretrained models, please conduct the experiments by running
 
-This branch contains the pytorch implementation of <a href="https://arxiv.org/abs/2204.12484">ViTPose: Simple Vision Transformer Baselines for Human Pose Estimation</a> and <a href="https://arxiv.org/abs/2212.04246">ViTPose+: Vision Transformer Foundation Model for Generic Body Pose Estimation</a>. It obtains 81.1 AP on MS COCO Keypoint test-dev set.
+```bash
+# for single machine
+bash tools/dist_train.sh <Config PATH> <NUM GPUs> --cfg-options model.pretrained=<Pretrained PATH> --seed 0
 
-<img src="figures/Throughput.png" class="left" width='80%'>
+# for multiple machines
+python -m torch.distributed.launch --nnodes <Num Machines> --node_rank <Rank of Machine> --nproc_per_node <GPUs Per Machine> --master_addr <Master Addr> --master_port <Master Port> tools/train.py <Config PATH> --cfg-options model.pretrained=<Pretrained PATH> --launcher pytorch --seed 0
+```
 
-## Web Demo
+To test the pretrained models performance, please run 
 
-- Integrated into [Huggingface Spaces 🤗](https://huggingface.co/spaces) using [Gradio](https://github.com/gradio-app/gradio). Try out the Web Demo for video: [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/hysts/ViTPose_video) and images [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/Gradio-Blocks/ViTPose)
+```bash
+bash tools/dist_test.sh <Config PATH> <Checkpoint PATH> <NUM GPUs>
+```
+
+For ViTPose+ pre-trained models, please first re-organize the pre-trained weights using
+
+```bash
+python tools/model_split.py --source <Pretrained PATH>
+```
 
 ## MAE Pre-trained model
 
@@ -194,57 +205,6 @@ Using YOLOv3 human detector. Note the configs here are only for evaluation.
 > [2022-04-27] Our ViTPose with ViTAE-G obtains 81.1 AP on COCO test-dev set! 
 
 > Applications of ViTAE Transformer include: [image classification](https://github.com/ViTAE-Transformer/ViTAE-Transformer/tree/main/Image-Classification) | [object detection](https://github.com/ViTAE-Transformer/ViTAE-Transformer/tree/main/Object-Detection) | [semantic segmentation](https://github.com/ViTAE-Transformer/ViTAE-Transformer/tree/main/Semantic-Segmentation) | [animal pose segmentation](https://github.com/ViTAE-Transformer/ViTAE-Transformer/tree/main/Animal-Pose-Estimation) | [remote sensing](https://github.com/ViTAE-Transformer/ViTAE-Transformer-Remote-Sensing) | [matting](https://github.com/ViTAE-Transformer/ViTAE-Transformer-Matting) | [VSA](https://github.com/ViTAE-Transformer/ViTAE-VSA) | [ViTDet](https://github.com/ViTAE-Transformer/ViTDet)
-
-## Usage
-
-We use PyTorch 1.9.0 or NGC docker 21.06, and mmcv 1.3.9 for the experiments.
-```bash
-git clone https://github.com/open-mmlab/mmcv.git
-cd mmcv
-git checkout v1.3.9
-MMCV_WITH_OPS=1 pip install -e .
-cd ..
-git clone https://github.com/ViTAE-Transformer/ViTPose.git
-cd ViTPose
-pip install -v -e .
-```
-
-After install the two repos, install timm and einops, i.e.,
-```bash
-pip install timm==0.4.9 einops
-```
-
-After downloading the pretrained models, please conduct the experiments by running
-
-```bash
-# for single machine
-bash tools/dist_train.sh <Config PATH> <NUM GPUs> --cfg-options model.pretrained=<Pretrained PATH> --seed 0
-
-# for multiple machines
-python -m torch.distributed.launch --nnodes <Num Machines> --node_rank <Rank of Machine> --nproc_per_node <GPUs Per Machine> --master_addr <Master Addr> --master_port <Master Port> tools/train.py <Config PATH> --cfg-options model.pretrained=<Pretrained PATH> --launcher pytorch --seed 0
-```
-
-To test the pretrained models performance, please run 
-
-```bash
-bash tools/dist_test.sh <Config PATH> <Checkpoint PATH> <NUM GPUs>
-```
-
-For ViTPose+ pre-trained models, please first re-organize the pre-trained weights using
-
-```bash
-python tools/model_split.py --source <Pretrained PATH>
-```
-
-## Todo
-
-This repo current contains modifications including:
-
-- [x] Upload configs and pretrained models
-
-- [x] More models with SOTA results
-
-- [x] Upload multi-task training config
 
 ## Acknowledge
 We acknowledge the excellent implementation from [mmpose](https://github.com/open-mmlab/mmdetection) and [MAE](https://github.com/facebookresearch/mae).
