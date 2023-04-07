@@ -27,11 +27,6 @@ python tools/model_split.py --source <Pretrained PATH>
 
 Or for ViTPose with Halpe: [model](https://drive.google.com/file/d/1Ylv9vojQkgpDvYcK6f2BQpyq9vnpR0ve/view?usp=share_link)
 
-Download desired Yolov5 pretrained [model](https://github.com/ultralytics/yolov5)
-
-Or replace `args.det_checkpoint` with yolov5 detector type at line 120 in `demo/top_down_video_demo_with_yolov5.py` to
-download model from torch hub.
-
 ## Annotation script
 
 Specify arguments in `video.sh`.
