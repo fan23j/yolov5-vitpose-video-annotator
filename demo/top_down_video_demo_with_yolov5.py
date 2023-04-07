@@ -72,7 +72,6 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('--pose-config', help='Config file for pose')
     parser.add_argument('--pose-checkpoint', help='Checkpoint file for pose')
-    parser.add_argument('--det-checkpoint', help="Checkpoint file for detector")
     parser.add_argument('--video-path', type=str, help='Video path')
     parser.add_argument(
         '--show',
@@ -117,7 +116,7 @@ def main():
     pose_buffer = []
 
     # initialize yolov5 detector
-    detector = torch.hub.load("ultralytics/yolov5", args.det_checkpoint)
+    detector = torch.hub.load("ultralytics/yolov5", 'yolov5l6')
     
     # build the pose model from a config file and a checkpoint file
     pose_model = init_pose_model(
