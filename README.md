@@ -1,5 +1,4 @@
-Annotation repo using large ViTPose models alongside Yolov5 detectors to annotate videos.
-
+Annotation repo using large ViTPose models alongside Yolov5 detectors to annotate videos. Currently outputs predictions in "Alphapose" format.
 ## Setup
 
 We use PyTorch 1.9.0 or NGC docker 21.06, and mmcv 1.3.9 for the experiments.
@@ -26,9 +25,9 @@ For ViTPose+ pre-trained models, please first re-organize the pre-trained weight
 python tools/model_split.py --source <Pretrained PATH>
 ```
 
-Or for ViTPose with Halpe: 
+Or for ViTPose with Halpe: [model](https://drive.google.com/file/d/1Ylv9vojQkgpDvYcK6f2BQpyq9vnpR0ve/view?usp=share_link)
 
-Download desired Yolov5 pretrained model from [https://github.com/ultralytics/yolov5]
+Download desired Yolov5 pretrained [model](https://github.com/ultralytics/yolov5)
 
 Or replace `args.det_checkpoint` with yolov5 detector type at line 120 in `demo/top_down_video_demo_with_yolov5.py` to
 download model from torch hub.
