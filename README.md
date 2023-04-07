@@ -44,7 +44,7 @@ Specify arguments in `video.sh`.
 
 `--video-path` Path to your input video for inference
 
-`--out-video-root` Output video path
+`--out-video-root` Output video + json path
 
 Run the script with
 `
