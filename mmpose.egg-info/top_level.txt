@@ -1,0 +1,3 @@
+YOLOv6
+mmcv_custom
+mmpose
